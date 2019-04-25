@@ -2,7 +2,16 @@
 import mongoose from 'mongoose';
 
 // Document shape
-const schema = new mongoose.Schema({});
+import { User } from './users';
 
 // Collection
-export const staff = mongoose.model('staff', schema);
+export const staff = User.discriminator(
+    'staff',
+    new mongoose.Schema({
+        role: {
+            type:     String,
+            required: true,
+        },
+        disabled: Boolean,
+    }),
+);
