@@ -5,4 +5,4 @@ import mongoose from 'mongoose';
 const schema = new mongoose.Schema({});
 
 // Collection
-export const users = mongoose.model('staff', schema);
+export const staff = mongoose.model('staff', schema);
