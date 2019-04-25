@@ -54,6 +54,7 @@ const schema = new mongoose.Schema(
 );
 
 schema.index({ 'name.first': 1, 'name.last': 1 });
+schema.index({ 'name.first': 'text', 'name.last': 'text' });
 
 // Collection
 export const User = mongoose.model('users', schema);
