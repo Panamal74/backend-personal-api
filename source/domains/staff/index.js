@@ -2,7 +2,7 @@
 import dg from 'debug';
 
 // Instruments
-// import { Staff } from '../../controllers';
+import { Staff } from '../../controllers';
 
 const debug = dg('router:staff');
 
@@ -24,9 +24,9 @@ export const post = async (req, res) => {
     debug(`${req.method} — ${req.originalUrl}`);
 
     try {
-        const data = await req.body;
-        // const staff = new Staff(req.body);
-        // const data = await staff.create();
+        // const data = await req.body;
+        const staff = new Staff(req.body);
+        const data = await staff.create();
 
         res.status(200).json({ data });
     } catch (error) {

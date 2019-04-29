@@ -12,6 +12,9 @@ export const staff = User.discriminator(
             type:     String,
             required: true,
         },
-        disabled: Boolean,
+        disabled: {
+            type:    Boolean,
+            default: false,
+        },
     }),
 );

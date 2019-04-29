@@ -1,5 +1,6 @@
 // Core
 import mongoose from 'mongoose';
+import hashGeneratePlugin from '../helpers/generateHash';
 
 import { customers, products } from  './index';
 
@@ -53,6 +54,8 @@ const schema = new mongoose.Schema(
         },
     },
 );
+
+schema.plugin(hashGeneratePlugin, { version: 'v4' });
 
 // Collection
 export const orders = mongoose.model('orders', schema);

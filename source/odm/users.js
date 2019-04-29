@@ -1,5 +1,6 @@
 // Core
 import mongoose from 'mongoose';
+import hashGeneratePlugin from "../helpers/generateHash";
 
 // Document shape
 const schema = new mongoose.Schema(
@@ -43,7 +44,9 @@ const schema = new mongoose.Schema(
                 primary: Boolean,
             },
         ],
-        password: String,
+        password: {
+            type: String,
+        },
     },
     {
         timestamps: {
@@ -52,6 +55,8 @@ const schema = new mongoose.Schema(
         },
     },
 );
+
+schema.plugin(hashGeneratePlugin, { version: 'v4' });
 
 schema.index({ 'name.first': 1, 'name.last': 1 });
 schema.index({ 'name.first': 'text', 'name.last': 'text' });

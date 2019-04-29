@@ -1,5 +1,6 @@
 // Core
 import mongoose from 'mongoose';
+import hashGeneratePlugin from "../helpers/generateHash";
 
 // Document shape
 const schema = new mongoose.Schema(
@@ -37,6 +38,8 @@ const schema = new mongoose.Schema(
         },
     },
 );
+
+schema.plugin(hashGeneratePlugin, { version: 'v4' });
 
 // Collection
 export const products = mongoose.model('products', schema);

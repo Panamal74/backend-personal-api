@@ -1,5 +1,6 @@
 // Core
 import bcrypt from 'bcrypt';
+import v4 from 'uuid/v4';
 
 // Instruments
 import { staff } from '../odm';
@@ -24,4 +25,20 @@ export class Staff {
 
         return hash;
     }
+
+    async create() {
+        const { name, password, emails = {}, phones = {}, role } = this.data;
+
+        const data = await staff.create({
+            hash: v4(),
+            name,
+            password,
+            emails,
+            phones,
+            role,
+        });
+
+        return data;
+    }
+
 }

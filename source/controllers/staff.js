@@ -12,4 +12,11 @@ export class Staff {
 
         return data;
     }
+
+    async create() {
+        const data = await this.models.staff.create();
+
+        return data;
+    }
+
 }
