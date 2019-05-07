@@ -1,25 +1,29 @@
 'use strict';
 
-const v4 = require('uuid/v4');
+const uuid = require('uuid');
 
 module.exports = (schema, options) => {
+    const { version } = options;
+    const isValid = ['v1', 'v3', 'v4', 'v5'].some(item => item === version);
+
+    if (!isValid) {
+        throw new Error('Not valid uuid version');
+    }
+
     schema.add({
-        hash: String,
+        hash: {
+            type:     String,
+            required: true,
+            unique:   true,
+            default: function() {
+                return uuid[version]();
+            },
+        }
     });
 
-    schema.pre('save', function(next) {
-        this.hash = v4();
-        next();
-    });
-
-    if (options && options.index) {
-        schema.path('hash').index(true);
-    }
-    if (options && options.required) {
-        schema.path('hash').required(true);
-    }
-    if (options && options.unique) {
-        schema.path('hash').unique(true);
-    }
+    // schema.pre('save', function(next) {
+    //     this.hash = uuid[version]();
+    //     next();
+    // });
 
 };

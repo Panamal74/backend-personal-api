@@ -2,10 +2,10 @@
 import mongoose from 'mongoose';
 
 // Document shape
-import { User } from './users';
+import { users } from './users';
 
 // Collection
-export const staff = User.discriminator(
+export const staff = users.discriminator(
     'staff',
     new mongoose.Schema({
         role: {

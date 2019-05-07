@@ -6,9 +6,9 @@ export const authenticate = (req, res, next) => {
         return next(new NotFoundError('cookie not found', 401));
     }
 
-    const { email } = req.session.user;
+    const { hash } = req.session.user;
 
-    if (email) {
+    if (hash) {
         next();
     } else {
         res.status(401).json({ message: 'authentication credentials are not valid' });

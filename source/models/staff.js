@@ -1,6 +1,5 @@
 // Core
 import bcrypt from 'bcrypt';
-import v4 from 'uuid/v4';
 
 // Instruments
 import { staff } from '../odm';
@@ -10,35 +9,35 @@ export class Staff {
         this.data = data;
     }
 
-    async login() {
-        const { email, password } = this.data;
-        const { hash, password: userPassword } = await staff
-            .findOne({ email })
-            .select('password hash')
-            .lean();
+    async create() {
+        const { name, email, phone, role, password } = this.data;
 
-        const match = await bcrypt.compare(password, userPassword);
-
-        if (!match) {
-            throw new Error('Credentials are not valid');
+        if (!/(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9!@#$%^&*a-zA-Z]{8,}/g.test(password)) {
+            throw new Error('Password must be at least 8 characters and include numbers, symbols, capital and small letters');
         }
 
-        return hash;
+        const hashedPassword = await bcrypt.hash(password, 11);
+
+        const newStaff = {
+            fullName: name,
+            password: hashedPassword,
+            role,
+        };
+        if (email) {
+            newStaff['emails'] = [{ email, primary: true }]
+        }
+        if (phone) {
+            newStaff['phones'] = [{ phone, primary: true }]
+        }
+
+        const { hash } = await staff.create(newStaff);
+
+        return { hash };
     }
 
-    async create() {
-        const { name, password, emails = {}, phones = {}, role } = this.data;
-
-        const data = await staff.create({
-            hash: v4(),
-            name,
-            password,
-            emails,
-            phones,
-            role,
-        });
+    async find() {
+        const data = await staff.find().lean();
 
         return data;
     }
-
 }

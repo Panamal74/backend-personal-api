@@ -2,10 +2,10 @@
 import mongoose from 'mongoose';
 
 // Document shape
-import { User } from './users';
+import { users } from './users';
 
 // Collection
-export const customers = User.discriminator(
+export const customers = users.discriminator(
     'customers',
     new mongoose.Schema({
         city: {

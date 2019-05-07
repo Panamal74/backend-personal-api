@@ -1,16 +1,10 @@
 // Core
 import mongoose from 'mongoose';
-import hashGeneratePlugin from "../helpers/generateHash";
+import addHashPlugin from "../helpers/addHash";
 
 // Document shape
 const schema = new mongoose.Schema(
     {
-        hash: {
-            type:     String,
-            index:    true,
-            required: true,
-            unique:   true,
-        },
         name: {
             first: {
                 type:      String,
@@ -32,7 +26,10 @@ const schema = new mongoose.Schema(
                     match:  /^([a-z0-9_\.-]+)@([a-z0-9_\.-]+)\.([a-z\.]{2,6})$/,
                     unique: true,
                 },
-                primary: Boolean,
+                primary: {
+                    type: Boolean,
+                    default: false,
+                },
             },
         ],
         phones: [
@@ -45,7 +42,9 @@ const schema = new mongoose.Schema(
             },
         ],
         password: {
-            type: String,
+            type:     String,
+            required: true,
+            select:   false,
         },
     },
     {
@@ -56,10 +55,21 @@ const schema = new mongoose.Schema(
     },
 );
 
-schema.plugin(hashGeneratePlugin, { version: 'v4' });
+schema.virtual('fullName')
+    .get(function() {
+        return `${this.name.first} ${this.name.last}`;
+    })
+    .set(function(value) {
+        const [first, last] = value.split(' ');
+
+        this.name.first = first;
+        this.name.last = last;
+    });
+
+schema.plugin(addHashPlugin, { version: 'v4' });
 
 schema.index({ 'name.first': 1, 'name.last': 1 });
 schema.index({ 'name.first': 'text', 'name.last': 'text' });
 
 // Collection
-export const User = mongoose.model('users', schema);
+export const users = mongoose.model('users', schema);

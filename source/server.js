@@ -9,7 +9,15 @@ import dg from 'debug';
 import * as domains from './domains';
 
 // Instruments
-import { requireJsonContent, getPassword, NotFoundError } from './helpers';
+import {
+    devLogger,
+    errorLogger,
+    notFoundLogger,
+    validationLogger,
+    requireJsonContent,
+    getPassword,
+    NotFoundError
+} from './helpers';
 
 // Initialize DB connection
 import './db';
@@ -51,10 +59,12 @@ app.use(requireJsonContent);
 
 if (process.env.NODE_ENV === 'development') {
     app.use((req, res, next) => {
-        const body
-            = req.method === 'GET' ? 'Body not supported for GET' : JSON.stringify(req.body, null, 2);
+        const body = req.method === 'GET'
+            ? 'Body not supported for GET'
+            : JSON.stringify(req.body, null, 2);
 
-        debug(`${req.method}\n${body}`);
+        devLogger.debug(`${req.method}\n${body}`);
+        // debug(`${req.method}\n${body}`);
         next();
     });
 }
@@ -81,8 +91,22 @@ if (process.env.NODE_ENV !== 'test') {
 
         debug(`Error: ${errorMessage}`);
 
+        switch (error.name) {
+            case 'NotFoundError':
+                notFoundLogger.error(errorMessage);
+                break;
+
+            case 'ValidationError':
+                validationLogger.error(errorMessage);
+                break;
+
+            default:
+                errorLogger.error(errorMessage);
+                break;
+        }
+
         const status = statusCode ? statusCode : 500;
-        res.status(status).json({ message: message });
+        res.status(status).json({ message: errorMessage });
     });
 }
 

@@ -1,18 +1,12 @@
 // Core
 import mongoose from 'mongoose';
-import hashGeneratePlugin from '../helpers/generateHash';
+import addHashPlugin from "../helpers/addHash";
 
 import { customers, products } from  './index';
 
 // Document shape
 const schema = new mongoose.Schema(
     {
-        hash: {
-            type:     String,
-            index:    true,
-            required: true,
-            unique:   true,
-        },
         uid: {
             type:     mongoose.SchemaTypes.ObjectId,
             required: true,
@@ -55,7 +49,7 @@ const schema = new mongoose.Schema(
     },
 );
 
-schema.plugin(hashGeneratePlugin, { version: 'v4' });
+schema.plugin(addHashPlugin, { version: 'v4' });
 
 // Collection
 export const orders = mongoose.model('orders', schema);

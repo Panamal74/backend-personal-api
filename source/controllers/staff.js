@@ -7,14 +7,20 @@ export class Staff {
         };
     }
 
-    async login() {
-        const data = await this.models.staff.login();
+    // async login() {
+    //     const data = await this.models.staff.login();
+    //
+    //     return data;
+    // }
+
+    async create() {
+        const data = await this.models.staff.create();
 
         return data;
     }
 
-    async create() {
-        const data = await this.models.staff.create();
+    async find() {
+        const data = await this.models.staff.find();
 
         return data;
     }
