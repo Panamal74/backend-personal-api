@@ -84,6 +84,7 @@ app.use('*', (req, res, next) => {
 });
 
 if (process.env.NODE_ENV !== 'test') {
+
     // eslint-disable-next-line no-unused-vars
     app.use((error, req, res, next) => {
         const { name, message, statusCode } = error;
