@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 
 // Instruments
 import { users } from '../odm';
+import { ValidationError } from "../helpers/errors";
 
 export class Users {
     constructor(data) {
@@ -19,7 +20,7 @@ export class Users {
         const match = await bcrypt.compare(password, userPassword);
 
         if (!match) {
-            throw new Error('Credentials are not valid');
+            throw new ValidationError('Credentials are not valid');
         }
 
         return hash;

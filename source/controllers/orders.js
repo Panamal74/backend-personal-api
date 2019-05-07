@@ -13,9 +13,20 @@ export class Orders {
     }
 
     async create() {
-        const data = await this.models.orders.create();
+        const { pid, count } = this.models.orders.data;
+        const products = new ProdModel();
+        const prodData = await products.findById(pid);
+        if (prodData && prodData.total - count < 0) {
+            throw new Error(`The requested number of product units (${count}) is missing`);
+        }
+        const newProduct = new ProdModel({total: prodData.total - count});
+        const newProdData = await newProduct.replaceByHash({ hash: prodData.hash});
+        if (newProdData) {
+            const data = await this.models.orders.create();
 
-        return data;
+            return data;
+        }
+        return null;
     }
 
     async find() {
