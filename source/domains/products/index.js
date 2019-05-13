@@ -32,13 +32,13 @@ export const post = async (req, res) => {
     }
 };
 
-export const getByHash = async (req, res) => {
+export const search = async (req, res) => {
     debug(`${req.method} — ${req.originalUrl}`);
 
     try {
         const { productHash } = req.params;
         const products = new Products();
-        const data = await products.findByHash({ hash: productHash });
+        const data = await products.findByHash(productHash);
 
         res.status(200).json({ data });
     } catch (error) {
@@ -46,13 +46,13 @@ export const getByHash = async (req, res) => {
     }
 };
 
-export const putByHash = async (req, res) => {
+export const replace = async (req, res) => {
     debug(`${req.method} — ${req.originalUrl}`);
 
     try {
         const { productHash } = req.params;
         const products = new Products(req.body);
-        const data = await products.replaceByHash({ hash: productHash });
+        const data = await products.replaceByHash(productHash);
 
         res.status(200).json({ data });
     } catch (error) {
@@ -60,13 +60,13 @@ export const putByHash = async (req, res) => {
     }
 };
 
-export const deleteByHash = async (req, res) => {
+export const remove = async (req, res) => {
     debug(`${req.method} — ${req.originalUrl}`);
 
     try {
         const { productHash } = req.params;
         const products = new Products();
-        const data = await products.removeByHash({ hash: productHash });
+        const data = await products.removeByHash(productHash);
 
         res.status(204).json({ data });
     } catch (error) {

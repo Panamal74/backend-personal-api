@@ -26,28 +26,38 @@ export class Products {
         return data;
     }
 
-    async findById(condition) {
-        const data = await products.findById(condition).lean();
+    async findById(id) {
+        const data = await products.findById(id).lean();
 
         return data;
     }
 
-    async findByHash(condition) {
-        const data = await products.findOne(condition).lean();
+    async setTotalById(id, total) {
+        const data = await products.findByIdAndUpdate(
+            id,
+            { $set: { total }},
+            { new: true }
+        ).lean();
 
         return data;
     }
 
-    async removeByHash(condition) {
-        const data = await products.findOneAndRemove(condition);
+    async findByHash(hash) {
+        const data = await products.findOne({ hash }).lean();
 
         return data;
     }
 
-    async replaceByHash(condition) {
+    async removeByHash(hash) {
+        const data = await products.findOneAndRemove({ hash });
+
+        return data;
+    }
+
+    async replaceByHash(hash) {
         const { title, description, price, discount, total } = this.data;
         const parameters = { $set: {}};
-        const options = { returnOriginal: false };
+        const options = { new: true };
 
         if (title) {
             parameters["$set"]["title"] = title;
@@ -75,7 +85,7 @@ export class Products {
         }
 
         const data = await products.findOneAndUpdate(
-            condition,
+            { hash },
             parameters,
             options
         ).lean();

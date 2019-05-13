@@ -1,8 +1,6 @@
-'use strict';
+import uuid from 'uuid';
 
-const uuid = require('uuid');
-
-module.exports = (schema, options) => {
+export const addHashPlugin = (schema, options) => {
     const { version } = options;
     const isValid = ['v1', 'v3', 'v4', 'v5'].some(item => item === version);
 
@@ -20,10 +18,5 @@ module.exports = (schema, options) => {
             },
         }
     });
-
-    // schema.pre('save', function(next) {
-    //     this.hash = uuid[version]();
-    //     next();
-    // });
 
 };

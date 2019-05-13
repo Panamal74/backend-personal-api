@@ -14,6 +14,8 @@ import {
     errorLogger,
     notFoundLogger,
     validationLogger,
+    forbiddenLogger,
+    serverErrorLogger,
     requireJsonContent,
     getPassword,
     NotFoundError
@@ -63,8 +65,7 @@ if (process.env.NODE_ENV === 'development') {
             ? 'Body not supported for GET'
             : JSON.stringify(req.body, null, 2);
 
-        devLogger.debug(`${req.method}\n${body}`);
-        // debug(`${req.method}\n${body}`);
+        debug(`${req.method}\n${body}`);
         next();
     });
 }
@@ -84,21 +85,28 @@ app.use('*', (req, res, next) => {
 });
 
 if (process.env.NODE_ENV !== 'test') {
-
     // eslint-disable-next-line no-unused-vars
-    app.use((error, req, res, next) => {
+    app.use(function(error, req, res, next) {
         const { name, message, statusCode } = error;
         const errorMessage = `${name}: ${message}`;
 
-        debug(`Error: ${errorMessage}`);
+        devLogger.debug(`Error: ${errorMessage}`);
 
-        switch (error.name) {
+        switch (name) {
             case 'NotFoundError':
                 notFoundLogger.error(errorMessage);
                 break;
 
             case 'ValidationError':
                 validationLogger.error(errorMessage);
+                break;
+
+            case 'ForbiddenError':
+                forbiddenLogger.error(errorMessage);
+                break;
+
+            case 'ServerError':
+                serverErrorLogger.error(errorMessage);
                 break;
 
             default:

@@ -15,6 +15,11 @@ export default {
         },
         password: {
             type: 'string',
+            pattern: '(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9!@#$%^&*a-zA-Z]{8,}',
+            // кастомное сообщение не подтягивается :(
+            // message: {
+            //     pattern: '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+            // }
         },
     },
     required: [ 'name', 'email', 'phone', 'role', 'password' ],

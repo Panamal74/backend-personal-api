@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 
 // Instruments
 import { users } from '../odm';
-import { ValidationError } from "../helpers/errors";
+import {NotFoundError, ValidationError} from "../helpers/errors";
 
 export class Users {
     constructor(data) {
@@ -12,18 +12,23 @@ export class Users {
 
     async login() {
         const { email, password } = this.data;
-        const { hash, password: userPassword } = await users
+        const userData = await users
             .findOne({ "emails.email": email })
-            .select('password hash')
+            .select('hash __t password')
             .lean();
 
+        if (!userData) {
+            throw new NotFoundError('User not found');
+        }
+
+        const { hash, __t: role, password: userPassword } = userData;
         const match = await bcrypt.compare(password, userPassword);
 
         if (!match) {
             throw new ValidationError('Credentials are not valid');
         }
 
-        return hash;
+        return {hash, role};
     }
 
 }

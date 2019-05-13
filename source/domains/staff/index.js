@@ -6,21 +6,20 @@ import { Staff } from '../../controllers';
 
 const debug = dg('router:staff');
 
-export const get = async (req, res) => {
+export const get = async (req, res, next) => {
     debug(`${req.method} — ${req.originalUrl}`);
 
     try {
         const staff = new Staff();
         const data = await staff.find();
-        // const data = await [];
 
         res.status(200).json({ data });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        next(error)
     }
 };
 
-export const post = async (req, res) => {
+export const post = async (req, res, next) => {
     debug(`${req.method} — ${req.originalUrl}`);
 
     try {
@@ -29,6 +28,16 @@ export const post = async (req, res) => {
 
         res.status(201).json({ data });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        if (error.name === 'MongoError') {
+            const errCode = error.code;
+            if (errCode === 11000) {
+                const newError = new Error();
+                newError.name = 'ValidationError';
+                newError.message = `User with email address "${req.body.email}" already exists`;
+                newError.statusCode = 400;
+                return next(newError);
+            }
+        }
+        next(error)
     }
 };

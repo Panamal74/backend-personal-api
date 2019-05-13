@@ -3,10 +3,21 @@ import dg from 'debug';
 
 // Instruments
 import { Customers } from '../../controllers';
+import { ForbiddenError } from "../../helpers/errors";
 
 const debug = dg('router:customers');
 
-export const get = async (req, res) => {
+function getRight(req) {
+    const { hash } = req.session.user;
+    const { customerHash } = req.params;
+    if (hash !== customerHash) {
+        throw new ForbiddenError('Not enough rights to perform the operation');
+    }
+
+    return customerHash;
+}
+
+export const getCustomers = async (req, res, next) => {
     debug(`${req.method} — ${req.originalUrl}`);
 
     try {
@@ -15,11 +26,11 @@ export const get = async (req, res) => {
 
         res.status(200).json({ data });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        next(error);
     }
 };
 
-export const post = async (req, res) => {
+export const post = async (req, res, next) => {
     debug(`${req.method} — ${req.originalUrl}`);
 
     try {
@@ -28,48 +39,48 @@ export const post = async (req, res) => {
 
         res.status(201).json({ data });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        next(error);
     }
 };
 
-export const getByHash = async (req, res) => {
+export const get = async (req, res, next) => {
     debug(`${req.method} — ${req.originalUrl}`);
 
     try {
-        const { customerHash } = req.params;
+        const customerHash = getRight(req);
         const customers = new Customers();
-        const data = await customers.findByHash({ hash: customerHash });
+        const data = await customers.findByHash(customerHash);
 
         res.status(200).json({ data });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        next(error);
     }
 };
 
-export const putByHash = async (req, res) => {
+export const put = async (req, res, next) => {
     debug(`${req.method} — ${req.originalUrl}`);
 
     try {
-        const { customerHash } = req.params;
+        const customerHash = getRight(req);
         const customers = new Customers(req.body);
-        const data = await customers.replaceByHash({ hash: customerHash });
+        const data = await customers.replaceByHash(customerHash);
 
         res.status(200).json({ data });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        next(error)
     }
 };
 
-export const deleteByHash = async (req, res) => {
+export const remove = async (req, res, next) => {
     debug(`${req.method} — ${req.originalUrl}`);
 
     try {
-        const { customerHash } = req.params;
+        const customerHash = getRight(req);
         const customers = new Customers();
-        const data = await customers.removeByHash({ hash: customerHash });
+        const data = await customers.removeByHash(customerHash);
 
         res.status(204).json({ data });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        next(error)
     }
 };

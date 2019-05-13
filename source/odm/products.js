@@ -1,6 +1,6 @@
 // Core
 import mongoose from 'mongoose';
-import addHashPlugin from "../helpers/addHash";
+import { addHashPlugin } from "../helpers/plugins";
 
 // Document shape
 const schema = new mongoose.Schema(

@@ -19,20 +19,20 @@ export class Products {
         return data;
     }
 
-    async findByHash(params) {
-        const data = await this.models.products.findByHash(params);
+    async findByHash(hash) {
+        const data = await this.models.products.findByHash(hash);
 
         return data;
     }
 
-    async replaceByHash(params) {
-        const data = await this.models.products.replaceByHash(params);
+    async replaceByHash(hash) {
+        const data = await this.models.products.replaceByHash(hash);
 
         return data;
     }
 
-    async removeByHash(params) {
-        const data = await this.models.products.removeByHash(params);
+    async removeByHash(hash) {
+        const data = await this.models.products.removeByHash(hash);
 
         return data;
     }
