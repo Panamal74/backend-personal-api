@@ -48,6 +48,7 @@ export class Customers {
     async _getAllOrdersCost(userId) {
         const orders = new OrdersModel();
         const userOrders = await orders.findOrdersByCustomerId(userId);
+
         let cost = 0;
 
         if (userOrders.length > 0) {
