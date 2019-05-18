@@ -21,7 +21,7 @@ export default {
             minimum: 0,
         },
     },
-    required: [ 'title', 'price', 'discount', 'total' ],
+    required: [ 'title', 'description', 'price', 'discount' ],
 
     // additionalProperties: false,
 };

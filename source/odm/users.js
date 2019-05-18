@@ -64,6 +64,7 @@ const schema = new mongoose.Schema(
             createdAt: 'created',
             updatedAt: 'modified',
         },
+        toObject: { virtuals: true }
     },
 );
 

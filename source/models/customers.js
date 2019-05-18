@@ -10,7 +10,7 @@ export class Customers {
     }
 
     async create() {
-        const { name, email, phone, city, country, password } = this.data;
+        const { name, email, phone, city = null, country = null, password } = this.data;
 
         const hashedPassword = await bcrypt.hash(password, 11);
 
@@ -18,10 +18,16 @@ export class Customers {
             fullName: name,
             password: hashedPassword,
             emails: [{ email, primary: true }],
-            phones: [{ phone, primary: true }],
-            city,
-            country,
+            phones: [{ phone, primary: true }]
         };
+
+        if (city) {
+            newCustomer["city"] = city;
+        }
+
+        if (country) {
+            newCustomer["country"] = country;
+        }
 
         const { hash } = await customers.create(newCustomer);
 
@@ -40,13 +46,13 @@ export class Customers {
         return data;
     }
 
-    async findByHash(hash) {
-        const data = await customers.findOne({ hash }).lean();
+    async findByHash(condition) {
+        const data = await customers.findOne(condition).lean();
 
         return data;
     }
 
-    async replaceByHash(hash) {
+    async replaceByHash(condition) {
         const { name, emails, phones, city, country } = this.data;
         const parameters = { $set: {}};
         const options = { new: true };
@@ -71,7 +77,7 @@ export class Customers {
         }
 
         const data = await customers.findOneAndUpdate(
-            { hash },
+            condition,
             parameters,
             options
         ).lean();
@@ -80,8 +86,8 @@ export class Customers {
 
     }
 
-    async removeByHash(hash) {
-        const data = await customers.findOneAndRemove({ hash });
+    async removeByHash(condition) {
+        const data = await customers.findOneAndDelete(condition);
 
         return data;
     }

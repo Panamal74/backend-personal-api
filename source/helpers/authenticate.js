@@ -1,5 +1,5 @@
 // Instruments
-import {ForbiddenError, NotFoundError, ValidationError} from './errors';
+import {ForbiddenError, NotFoundError, ValidationError} from './';
 
 export const authenticate = (only = null) => (req, res, next) => {
     if (!req.session.hasOwnProperty('user')) {
@@ -13,8 +13,8 @@ export const authenticate = (only = null) => (req, res, next) => {
     }
 
     if (only) {
-        if (user.role !== only) {
-            return next(new ForbiddenError('Not enough rights to perform the operation', 403));
+        if (!only.hasOwnProperty(user.role) || only[user.role] !== true) {
+            return next(new ForbiddenError('Not enough rights to perform the operation', 401));
         }
     }
 

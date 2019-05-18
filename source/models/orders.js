@@ -19,57 +19,32 @@ export class Orders {
         return { hash };
     }
 
-    async find() {
-        const data = await orders.find()
-            .populate({
-                path: 'uid',
-                select: 'name phones -_id'
-            })
-            .populate({
-                path: 'pid',
-                select: 'title price discount -_id'
-            })
-            .select('-_id -__v')
-            .lean();
-
-        return data;
-    }
-
-    async findOrdersByCustomerId(id) {
+    async find(condition = {}) {
         const data = await orders
-            .find({ uid: id })
-            .select('pid count -_id')
-            .lean();
+            .find(condition)
+            .select('-_id -__v');
 
         return data;
     }
 
-    async findByHash(hash) {
-        const data = await orders.findOne({ hash })
-            .populate({
-                path: 'uid',
-                select: 'fullName name phones'
-            })
-            .populate({
-                path: 'pid',
-                select: 'title price discount'
-            })
-            .select('-_id -__v')
-            .lean();
+    async findByHash(condition = {}) {
+        const data = await orders
+            .findOne(condition)
+            .select('-_id -__v');
 
         return data;
     }
 
-    async removeByHash(hash) {
-        const data = await orders.findOneAndRemove({ hash });
+    async removeByHash(condition = {}) {
+        const data = await orders.findOneAndDelete(condition);
 
         return data;
     }
 
-    async replaceByHash(hash) {
+    async replaceByHash(condition = {}) {
         const { uid, pid, count, comment } = this.data;
         const parameters = { $set: {}};
-        const options = { returnOriginal: false };
+        const options = { new: true };
 
         if (uid) {
             parameters["$set"]["uid"] = uid;
@@ -84,20 +59,12 @@ export class Orders {
             parameters["$set"]["comment"] = comment;
         }
 
-        const data = await orders.findOneAndUpdate(
-            { hash },
-            parameters,
-            options)
-            .populate({
-                path: 'uid',
-                select: 'name phones -_id'
-            })
-            .populate({
-                path: 'pid',
-                select: 'title price discount -_id'
-            })
-            .select('-_id -__v')
-            .lean();
+        const data = await orders
+            .findOneAndUpdate(
+                condition,
+                parameters,
+                options)
+            .select('-_id -__v');
 
         return data;
 

@@ -12,7 +12,7 @@ export const post = async (req, res, next) => {
 
     try {
         if (!req.headers.authorization) {
-            return next(new NotFoundError('Data required for authorization not found'));
+            return next(new NotFoundError('Data required for authorization not found', 400));
         }
 
         const [ , credentials ] = req.headers.authorization.split(' ');

@@ -18,14 +18,14 @@ export class Users {
             .lean();
 
         if (!userData) {
-            throw new NotFoundError('User not found');
+            throw new NotFoundError('User not found', 401);
         }
 
         const { hash, __t: role, password: userPassword } = userData;
         const match = await bcrypt.compare(password, userPassword);
 
         if (!match) {
-            throw new ValidationError('Credentials are not valid');
+            throw new ValidationError('Credentials are not valid', 401);
         }
 
         return {hash, role};

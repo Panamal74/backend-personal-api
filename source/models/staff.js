@@ -27,8 +27,18 @@ export class Staff {
         return { hash };
     }
 
-    async find() {
-        const data = await staff.find().lean();
+    async find(condition = {}) {
+        const data = await staff
+            .find(
+                condition,
+                {
+                    _id: false,
+                    name: true,
+                    phones: true,
+                    emails: true,
+                    role: true
+                })
+            .lean();
 
         return data;
     }

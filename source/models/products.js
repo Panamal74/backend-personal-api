@@ -7,7 +7,7 @@ export class Products {
     }
 
     async create() {
-        const { title, description, price, discount, total } = this.data;
+        const { title, description, price, discount, total = 0 } = this.data;
 
         const { hash } = await products.create({
             title,
@@ -33,60 +33,52 @@ export class Products {
     }
 
     async setTotalById(id, total) {
-        const data = await products.findByIdAndUpdate(
-            id,
-            { $set: { total }},
-            { new: true }
-        ).lean();
+        const data = await products
+            .findByIdAndUpdate(
+                id,
+                { $set: { total }},
+                { new: true })
+            .lean();
 
         return data;
     }
 
-    async findByHash(hash) {
-        const data = await products.findOne({ hash }).lean();
+    async findByHash(condition) {
+        const data = await products.findOne(condition).lean();
 
         return data;
     }
 
-    async removeByHash(hash) {
-        const data = await products.findOneAndRemove({ hash });
+    async removeByHash(condition) {
+        const data = await products.findOneAndDelete(condition);
 
         return data;
     }
 
-    async replaceByHash(hash) {
-        const { title, description, price, discount, total } = this.data;
-        const parameters = { $set: {}};
+    async replaceByHash(condition) {
+        const newProduct = this.data;
+        const _set = {};
         const options = { new: true };
 
-        if (title) {
-            parameters["$set"]["title"] = title;
+        if (newProduct.title) {
+            _set["title"] = newProduct.title;
         }
-        if (description) {
-            parameters["$set"]["description"] = description;
+        if (newProduct.description) {
+            _set["description"] = newProduct.description;
         }
-        if (price) {
-            if (price < 0 || price === 0) {
-                throw new Error('Cost cannot be less than or equal to zero');
-            }
-            parameters["$set"]["price"] = price;
+        if (newProduct.price) {
+            _set["price"] = newProduct.price;
         }
-        if (discount) {
-            if (discount < 0 || discount > 50) {
-                throw new Error('Discount cannot be less than 0 or more than 50');
-            }
-            parameters["$set"]["discount"] = discount;
+        if (newProduct.discount) {
+            _set["discount"] = newProduct.discount;
         }
-        if (total) {
-            if (total < 0) {
-                throw new Error('Quantity can not be less than zero');
-            }
-            parameters["$set"]["total"] = total;
+        if (newProduct.total) {
+            _set["total"] = newProduct.total;
         }
 
         const data = await products.findOneAndUpdate(
-            { hash },
-            parameters,
+            condition,
+            { $set: _set },
             options
         ).lean();
 
