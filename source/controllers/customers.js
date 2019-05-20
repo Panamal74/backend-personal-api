@@ -17,20 +17,20 @@ export class Customers {
         };
     }
 
-    async _getArray(oldArray, newArray, fieldName) {
-        const remArray = await newArray
+    _getArray(oldArray, newArray, fieldName) {
+        const remArray = newArray
             .filter(item => item.action === "remove")
             .map(item => { return item[fieldName] });
 
-        const addArray = await newArray
+        const addArray = newArray
             .filter(item => item.action === "add")
             .map(item => { return item[fieldName] });
 
-        const resArray = await oldArray
+        const resArray = oldArray
             .filter(item => remArray.indexOf(item[fieldName]) === -1)
             .map(item => { return item[fieldName] });
 
-        await addArray.forEach(item => {
+        addArray.forEach(item => {
             if (resArray.indexOf(item) === -1) {
                 resArray.push(item)
             }
@@ -40,7 +40,7 @@ export class Customers {
             throw new ValidationError(`Cannot delete all ${fieldName} items. There must be at least one ${fieldName}`)
         }
 
-        const returnArray = await resArray.map((item, index) => {
+        const returnArray = resArray.map((item, index) => {
             const retVal = {};
             retVal[fieldName] = item;
             if (index === 0) {
@@ -82,11 +82,11 @@ export class Customers {
             } = await this.models.customers.findByHash(condition);
 
             if (user.emails) {
-                this.models.customers.data.emails = await this._getArray(oldEmails, user.emails, 'email');
+                this.models.customers.data.emails = this._getArray(oldEmails, user.emails, 'email');
             }
 
             if (user.phones) {
-                this.models.customers.data.phones = await this._getArray(oldPhones, user.phones, 'phone');
+                this.models.customers.data.phones = this._getArray(oldPhones, user.phones, 'phone');
             }
         }
 
