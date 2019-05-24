@@ -3,7 +3,7 @@ import dg from 'debug';
 
 // Instruments
 import { Users } from '../../controllers';
-import { NotFoundError } from "../../helpers/errors";
+import { NotFoundError } from '../../helpers';
 
 const debug = dg('router:auth');
 

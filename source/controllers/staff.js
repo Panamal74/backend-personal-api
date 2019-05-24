@@ -1,5 +1,5 @@
 import { Staff as StaffModel } from '../models';
-import { getStaffs } from "../helpers";
+import { getStaffs } from '../helpers';
 
 export class Staff {
     constructor(data) {
@@ -19,5 +19,4 @@ export class Staff {
 
         return getStaffs(data);
     }
-
 }

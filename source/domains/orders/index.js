@@ -3,7 +3,7 @@ import dg from 'debug';
 
 // Instruments
 import { Orders } from '../../controllers';
-import { getOrderRight } from "../../helpers";
+import { getOrderRight } from '../../helpers';
 
 const debug = dg('router:orders');
 
@@ -16,7 +16,7 @@ export const getOrders = async (req, res, next) => {
 
         res.status(200).json({ data });
     } catch (error) {
-        next(error)
+        next(error);
     }
 };
 

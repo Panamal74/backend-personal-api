@@ -1,11 +1,11 @@
 {
-  "name": "backend-personal",
+  "name": "backend-personal-api",
   "version": "0.1.1",
   "main": "index.js",
   "scripts": {
     "start": "nodemon",
-    "build": "NODE_ENV=production node -r @babel/register './node_modules/.bin/webpack' --config=./webpack/webpack.config.js",
-    "lint:eslint": "jest --projects 'jest/jest.eslint.config.json'"
+    "build": "cross-env NODE_ENV=production node -r @babel/register './node_modules/.bin/webpack' --config='./webpack/webpack.config.js'",
+    "lint:eslint": "jest --projects ./jest/jest.eslint.config.json"
   },
   "engines": {
     "node": "10.x"
@@ -43,6 +43,7 @@
     "bcrypt": "^3.0.6",
     "connect-mongo": "^2.0.3",
     "cookie-parser": "^1.4.4",
+    "cross-env": "^5.2.0",
     "debug": "^4.1.1",
     "dotenv": "^7.0.0",
     "express": "^4.16.4",

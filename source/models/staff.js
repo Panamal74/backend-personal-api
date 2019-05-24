@@ -17,8 +17,8 @@ export class Staff {
         const newStaff = {
             fullName: name,
             password: hashedPassword,
-            emails: [{ email, primary: true }],
-            phones: [{ phone, primary: true }],
+            emails:   [{ email, primary: true }],
+            phones:   [{ phone, primary: true }],
             role,
         };
 
@@ -28,16 +28,15 @@ export class Staff {
     }
 
     async find(condition = {}) {
+        const parameters = {
+            _id:    false,
+            name:   true,
+            phones: true,
+            emails: true,
+            role:   true,
+        };
         const data = await staff
-            .find(
-                condition,
-                {
-                    _id: false,
-                    name: true,
-                    phones: true,
-                    emails: true,
-                    role: true
-                })
+            .find(condition, parameters)
             .lean();
 
         return data;

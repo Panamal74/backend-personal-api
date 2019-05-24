@@ -12,5 +12,4 @@ export class Users {
 
         return data;
     }
-
 }

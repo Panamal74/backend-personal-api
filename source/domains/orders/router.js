@@ -10,8 +10,8 @@ import { authenticate, limiter, validateOrder } from '../../helpers';
 const route = express.Router();
 
 const only = {
-    staff: true,
-    customers: true
+    staff:     true,
+    customers: true,
 };
 
 route.get('/', [ authenticate(only), limiter(1000, 60 * 1000) ], restRequests.getOrders);

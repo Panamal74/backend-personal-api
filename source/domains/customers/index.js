@@ -3,7 +3,7 @@ import dg from 'debug';
 
 // Instruments
 import { Customers } from '../../controllers';
-import { getUserRight } from "../../helpers";
+import { getUserRight } from '../../helpers';
 
 const debug = dg('router:customers');
 
@@ -36,6 +36,7 @@ export const post = async (req, res, next) => {
                 newError.name = 'ValidationError';
                 newError.message = `User with email address "${req.body.email}" already exists`;
                 newError.statusCode = 400;
+
                 return next(newError);
             }
         }
@@ -67,7 +68,7 @@ export const put = async (req, res, next) => {
 
         res.status(200).json({ data });
     } catch (error) {
-        next(error)
+        next(error);
     }
 };
 
@@ -81,6 +82,6 @@ export const remove = async (req, res, next) => {
 
         res.status(204).json({ data });
     } catch (error) {
-        next(error)
+        next(error);
     }
 };

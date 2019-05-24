@@ -1,6 +1,6 @@
 // Core
 import mongoose from 'mongoose';
-import { addHashPlugin } from "../helpers/plugins";
+import { addHashPlugin } from '../helpers/plugins';
 
 // Document shape
 const schema = new mongoose.Schema(
@@ -20,26 +20,26 @@ const schema = new mongoose.Schema(
             },
         },
         fullName: {
-            type: String,
+            type:    String,
             virtual: true,
             get() {
                 return `${this.name.first} ${this.name.last}`;
             },
             set(value) {
-                const [first, last] = value.split(' ');
+                const [ first, last ] = value.split(' ');
                 this.name.first = first;
                 this.name.last = last;
-            }
+            },
         },
-        emails:      [
+        emails: [
             {
                 email: {
                     type:   String,
                     match:  /^([a-z0-9_\.-]+)@([a-z0-9_\.-]+)\.([a-z\.]{2,6})$/,
-                    unique: true
+                    unique: true,
                 },
                 primary: {
-                    type: Boolean,
+                    type:    Boolean,
                     default: false,
                 },
             },
@@ -64,7 +64,9 @@ const schema = new mongoose.Schema(
             createdAt: 'created',
             updatedAt: 'modified',
         },
-        toObject: { virtuals: true }
+        toObject: {
+            virtuals: true,
+        },
     },
 );
 

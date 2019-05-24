@@ -18,7 +18,7 @@ import {
     serverErrorLogger,
     requireJsonContent,
     getPassword,
-    NotFoundError
+    NotFoundError,
 } from './helpers';
 
 // Initialize DB connection

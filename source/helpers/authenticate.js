@@ -13,7 +13,7 @@ export const authenticate = (only = null) => (req, res, next) => {
     }
 
     if (only) {
-        if (!only.hasOwnProperty(user.role) || only[user.role] !== true) {
+        if (!only.hasOwnProperty(user.role) || only[ user.role ] !== true) {
             return next(new ForbiddenError('Not enough rights to perform the operation', 401));
         }
     }

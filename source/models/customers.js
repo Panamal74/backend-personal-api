@@ -17,16 +17,16 @@ export class Customers {
         const newCustomer = {
             fullName: name,
             password: hashedPassword,
-            emails: [{ email, primary: true }],
-            phones: [{ phone, primary: true }]
+            emails:   [{ email, primary: true }],
+            phones:   [{ phone, primary: true }],
         };
 
         if (city) {
-            newCustomer["city"] = city;
+            newCustomer.city = city;
         }
 
         if (country) {
-            newCustomer["country"] = country;
+            newCustomer.country = country;
         }
 
         const { hash } = await customers.create(newCustomer);
@@ -53,37 +53,42 @@ export class Customers {
     }
 
     async replaceByHash(condition) {
-        const { name, emails, phones, city, country } = this.data;
-        const parameters = { $set: {}};
+        const {
+            name = null,
+            emails = null,
+            phones = null,
+            city = null,
+            country = null,
+        } = this.data;
+        const _set = {};
         const options = { new: true };
 
         if (name) {
-            parameters["$set"]["name"] = {
+            _set.name = {
                 first: name.first,
-                last: name.last
+                last:  name.last,
             };
         }
         if (emails) {
-            parameters["$set"]["emails"] = emails;
+            _set.emails = emails;
         }
         if (phones) {
-            parameters["$set"]["phones"] = phones;
+            _set.phones = phones;
         }
         if (city) {
-            parameters["$set"]["city"] = city;
+            _set.city = city;
         }
         if (country) {
-            parameters["$set"]["country"] = country;
+            _set.country = country;
         }
 
         const data = await customers.findOneAndUpdate(
             condition,
-            parameters,
-            options
+            { $set: _set },
+            options,
         ).lean();
 
         return data;
-
     }
 
     async removeByHash(condition) {
@@ -91,5 +96,4 @@ export class Customers {
 
         return data;
     }
-
 }

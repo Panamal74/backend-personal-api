@@ -1,6 +1,6 @@
 // Core
 import mongoose from 'mongoose';
-import { addHashPlugin } from "../helpers/plugins";
+import { addHashPlugin } from '../helpers';
 
 // Document shape
 const schema = new mongoose.Schema(
@@ -10,7 +10,7 @@ const schema = new mongoose.Schema(
             required: true,
         },
         description: String,
-        price: {
+        price:       {
             type:     Number,
             required: true,
             min:      0,

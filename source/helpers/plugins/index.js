@@ -1,1 +1,1 @@
-export { addHashPlugin } from "./addHash";
+export { addHashPlugin } from './addHash';

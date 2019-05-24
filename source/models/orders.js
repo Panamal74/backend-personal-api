@@ -13,7 +13,7 @@ export class Orders {
             uid,
             pid,
             count,
-            comment
+            comment,
         });
 
         return { hash };
@@ -43,31 +43,26 @@ export class Orders {
 
     async replaceByHash(condition = {}) {
         const { uid, pid, count, comment } = this.data;
-        const parameters = { $set: {}};
+        const _set = {};
         const options = { new: true };
 
         if (uid) {
-            parameters["$set"]["uid"] = uid;
+            _set.uid = uid;
         }
         if (pid) {
-            parameters["$set"]["pid"] = pid;
+            _set.pid = pid;
         }
         if (count) {
-            parameters["$set"]["count"] = count;
+            _set.count = count;
         }
         if (comment) {
-            parameters["$set"]["comment"] = comment;
+            _set.comment = comment;
         }
 
         const data = await orders
-            .findOneAndUpdate(
-                condition,
-                parameters,
-                options)
+            .findOneAndUpdate(condition, { $set: _set }, options)
             .select('-_id -__v');
 
         return data;
-
     }
-
 }

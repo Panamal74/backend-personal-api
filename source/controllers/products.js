@@ -5,8 +5,8 @@ import {
 import {
     getProduct,
     getProducts,
-    ValidationError
-} from "../helpers";
+    ValidationError,
+} from '../helpers';
 
 export class Products {
     constructor(data) {
@@ -42,20 +42,19 @@ export class Products {
     async removeByHash(condition) {
         let data = await this.models.products.findByHash(condition);
         if (!data) {
-            throw new ValidationError(
-                `The product with the key "${condition.hash}" is missing and cannot be removed from the Products collection`)
+            const errMessage = `The product with the key "${condition.hash}" is missing and cannot be removed from the Products collection`;
+            throw new ValidationError(errMessage);
         }
 
         const prodId = data._id;
         const orders = new OrderModel();
         data = await orders.find({ pid: prodId });
         if (data.length > 0) {
-            throw new ValidationError(`You can not remove a product because it is present in orders`)
+            throw new ValidationError('You can not remove a product because it is present in orders');
         }
 
         data = await this.models.products.removeByHash(condition);
 
         return data;
     }
-
 }

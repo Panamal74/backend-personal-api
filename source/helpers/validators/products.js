@@ -3,15 +3,15 @@ import { ValidationError } from '../errors';
 
 function _structure(data) {
     if (!data) { // data exist error
-        throw new ValidationError('Product data is missing or undefined')
+        throw new ValidationError('Product data is missing or undefined');
     }
     if (data && typeof data !== 'object') { // data type error
-        throw new ValidationError('Product data must be of type object')
+        throw new ValidationError('Product data must be of type object');
     }
     if (Object.keys(data).length > 5) { // data structure error
-        const possibleFields = ['title', 'description', 'price', 'discount', 'total'];
+        const possibleFields = [ 'title', 'description', 'price', 'discount', 'total' ];
         const extraFields = Object.keys(data)
-            .filter(field => possibleFields.indexOf(field) === -1);
+            .filter((field) => possibleFields.indexOf(field) === -1);
         throw new ValidationError(`The Product object contains extra properties: ${extraFields.toString()}`);
     }
 
@@ -62,8 +62,7 @@ function _required(data) {
         && !data.hasOwnProperty('description')
         && !data.hasOwnProperty('price')
         && !data.hasOwnProperty('discount')
-        && !data.hasOwnProperty('total'))
-    {
+        && !data.hasOwnProperty('total')) {
         throw new ValidationError('Data from the object "Product" does not contain real changes');
     }
 
@@ -76,8 +75,8 @@ export const validateProduct = () => (req, res, next) => {
         _structure(product); // structure validation
         _type(product); // fields type validation
         _required(product); // required validation
-        next()
+        next();
     } catch (error) {
-        next(error)
+        next(error);
     }
 };

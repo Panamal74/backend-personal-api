@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 
 // Instruments
 import { users } from '../odm';
-import {NotFoundError, ValidationError} from "../helpers/errors";
+import {NotFoundError, ValidationError} from '../helpers/errors';
 
 export class Users {
     constructor(data) {
@@ -13,7 +13,7 @@ export class Users {
     async login() {
         const { email, password } = this.data;
         const userData = await users
-            .findOne({ "emails.email": email })
+            .findOne({ 'emails.email': email })
             .select('hash __t password')
             .lean();
 
@@ -30,5 +30,4 @@ export class Users {
 
         return {hash, role};
     }
-
 }

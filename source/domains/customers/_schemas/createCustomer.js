@@ -17,7 +17,7 @@ export default {
             type: 'string',
         },
         password: {
-            type: 'string',
+            type:    'string',
             pattern: '(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9!@#$%^&*a-zA-Z]{8,}',
         },
     },

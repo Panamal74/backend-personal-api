@@ -1,21 +1,21 @@
 // Core
 import mongoose from 'mongoose';
 import autoPopulate from 'mongoose-autopopulate';
-import { addHashPlugin } from "../helpers/plugins";
+import { addHashPlugin } from '../helpers';
 
 // Document shape
 const schema = new mongoose.Schema(
     {
         uid: {
-            type:     mongoose.SchemaTypes.ObjectId,
-            ref:      'customers',
-            required: true,
+            type:         mongoose.SchemaTypes.ObjectId,
+            ref:          'customers',
+            required:     true,
             autopopulate: true,
         },
         pid: {
-            type:     mongoose.SchemaTypes.ObjectId,
-            ref:      'products',
-            required: true,
+            type:         mongoose.SchemaTypes.ObjectId,
+            ref:          'products',
+            required:     true,
             autopopulate: true,
         },
         count: {

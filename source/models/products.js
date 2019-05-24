@@ -14,7 +14,7 @@ export class Products {
             description,
             price,
             discount,
-            total
+            total,
         });
 
         return { hash };
@@ -34,10 +34,7 @@ export class Products {
 
     async setTotalById(id, total) {
         const data = await products
-            .findByIdAndUpdate(
-                id,
-                { $set: { total }},
-                { new: true })
+            .findByIdAndUpdate(id, { $set: { total } }, { new: true })
             .lean();
 
         return data;
@@ -61,29 +58,25 @@ export class Products {
         const options = { new: true };
 
         if (newProduct.title) {
-            _set["title"] = newProduct.title;
+            _set.title = newProduct.title;
         }
         if (newProduct.description) {
-            _set["description"] = newProduct.description;
+            _set.description = newProduct.description;
         }
         if (newProduct.price) {
-            _set["price"] = newProduct.price;
+            _set.price = newProduct.price;
         }
         if (newProduct.discount) {
-            _set["discount"] = newProduct.discount;
+            _set.discount = newProduct.discount;
         }
         if (newProduct.total) {
-            _set["total"] = newProduct.total;
+            _set.total = newProduct.total;
         }
 
-        const data = await products.findOneAndUpdate(
-            condition,
-            { $set: _set },
-            options
-        ).lean();
+        const data = await products
+            .findOneAndUpdate(condition, { $set: _set }, options)
+            .lean();
 
         return data;
-
     }
-
 }

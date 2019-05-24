@@ -8,16 +8,16 @@ export default {
             type: 'string',
         },
         price: {
-            type: 'number',
+            type:             'number',
             exclusiveMinimum: 0,
         },
         discount: {
-            type: 'number',
+            type:    'number',
             minimum: 0,
             maximum: 50,
         },
         total: {
-            type: 'number',
+            type:    'number',
             minimum: 0,
         },
     },
