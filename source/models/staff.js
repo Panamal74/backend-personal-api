@@ -9,19 +9,36 @@ export class Staff {
         this.data = data;
     }
 
-    async login() {
-        const { email, password } = this.data;
-        const { hash, password: userPassword } = await staff
-            .findOne({ email })
-            .select('password hash')
+    async create() {
+        const { name, email, phone, role, password } = this.data;
+
+        const hashedPassword = await bcrypt.hash(password, 11);
+
+        const newStaff = {
+            fullName: name,
+            password: hashedPassword,
+            emails:   [{ email, primary: true }],
+            phones:   [{ phone, primary: true }],
+            role,
+        };
+
+        const { hash } = await staff.create(newStaff);
+
+        return { hash };
+    }
+
+    async find(condition = {}) {
+        const parameters = {
+            _id:    false,
+            name:   true,
+            phones: true,
+            emails: true,
+            role:   true,
+        };
+        const data = await staff
+            .find(condition, parameters)
             .lean();
 
-        const match = await bcrypt.compare(password, userPassword);
-
-        if (!match) {
-            throw new Error('Credentials are not valid');
-        }
-
-        return hash;
+        return data;
     }
 }

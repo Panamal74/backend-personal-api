@@ -1,4 +1,5 @@
 import { Staff as StaffModel } from '../models';
+import { getStaffs } from '../helpers';
 
 export class Staff {
     constructor(data) {
@@ -7,9 +8,15 @@ export class Staff {
         };
     }
 
-    async login() {
-        const data = await this.models.staff.login();
+    async create() {
+        const data = await this.models.staff.create();
 
         return data;
+    }
+
+    async find() {
+        const data = await this.models.staff.find();
+
+        return getStaffs(data);
     }
 }

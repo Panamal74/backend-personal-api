@@ -9,7 +9,17 @@ import dg from 'debug';
 import * as domains from './domains';
 
 // Instruments
-import { requireJsonContent, getPassword, NotFoundError } from './helpers';
+import {
+    devLogger,
+    errorLogger,
+    notFoundLogger,
+    validationLogger,
+    forbiddenLogger,
+    serverErrorLogger,
+    requireJsonContent,
+    getPassword,
+    NotFoundError,
+} from './helpers';
 
 // Initialize DB connection
 import './db';
@@ -51,8 +61,9 @@ app.use(requireJsonContent);
 
 if (process.env.NODE_ENV === 'development') {
     app.use((req, res, next) => {
-        const body
-            = req.method === 'GET' ? 'Body not supported for GET' : JSON.stringify(req.body, null, 2);
+        const body = req.method === 'GET'
+            ? 'Body not supported for GET'
+            : JSON.stringify(req.body, null, 2);
 
         debug(`${req.method}\n${body}`);
         next();
@@ -60,6 +71,10 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use('/api/auth', domains.auth);
+app.use('/api/customers', domains.customers);
+app.use('/api/orders', domains.orders);
+app.use('/api/products', domains.products);
+app.use('/api/staff', domains.staff);
 
 app.use('*', (req, res, next) => {
     const error = new NotFoundError(
@@ -71,14 +86,36 @@ app.use('*', (req, res, next) => {
 
 if (process.env.NODE_ENV !== 'test') {
     // eslint-disable-next-line no-unused-vars
-    app.use((error, req, res, next) => {
+    app.use(function(error, req, res, next) {
         const { name, message, statusCode } = error;
         const errorMessage = `${name}: ${message}`;
 
-        debug(`Error: ${errorMessage}`);
+        devLogger.debug(`Error: ${errorMessage}`);
+
+        switch (name) {
+            case 'NotFoundError':
+                notFoundLogger.error(errorMessage);
+                break;
+
+            case 'ValidationError':
+                validationLogger.error(errorMessage);
+                break;
+
+            case 'ForbiddenError':
+                forbiddenLogger.error(errorMessage);
+                break;
+
+            case 'ServerError':
+                serverErrorLogger.error(errorMessage);
+                break;
+
+            default:
+                errorLogger.error(errorMessage);
+                break;
+        }
 
         const status = statusCode ? statusCode : 500;
-        res.status(status).json({ message: message });
+        res.status(status).json({ message: errorMessage });
     });
 }
 

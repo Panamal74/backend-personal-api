@@ -24,3 +24,4 @@ rules:
         beforeLineComment:  true,
         afterLineComment:   false
     }]
+    linebreak-style: 0

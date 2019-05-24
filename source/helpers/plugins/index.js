@@ -1,0 +1,1 @@
+export { addHashPlugin } from './addHash';

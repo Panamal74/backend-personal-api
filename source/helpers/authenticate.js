@@ -1,16 +1,22 @@
 // Instruments
-import { NotFoundError } from './';
+import {ForbiddenError, NotFoundError, ValidationError} from './';
 
-export const authenticate = (req, res, next) => {
-    if (!req.session.user) {
-        return next(new NotFoundError('cookie not found', 401));
+export const authenticate = (only = null) => (req, res, next) => {
+    if (!req.session.hasOwnProperty('user')) {
+        return next(new NotFoundError('Cookie not found', 401));
     }
 
-    const { email } = req.session.user;
+    const user = req.session.user;
 
-    if (email) {
-        next();
-    } else {
-        res.status(401).json({ message: 'authentication credentials are not valid' });
+    if (!user || !user.hasOwnProperty('hash') || !user.hasOwnProperty('role')) {
+        return next(new ValidationError('Authentication credentials are not valid', 401));
     }
+
+    if (only) {
+        if (!only.hasOwnProperty(user.role) || only[ user.role ] !== true) {
+            return next(new ForbiddenError('Not enough rights to perform the operation', 401));
+        }
+    }
+
+    next();
 };
